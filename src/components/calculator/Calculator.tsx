@@ -74,6 +74,8 @@ export default function CGPACalculator() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState<'question' | 'feedback'>('feedback');
   const [feedbackText, setFeedbackText] = useState('');
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
   const { 
     state, 
     inputMethod, 
@@ -110,6 +112,32 @@ export default function CGPACalculator() {
 
   const nextStep = () => setCurrentStep(prev => prev + 1);
   const prevStep = () => setCurrentStep(prev => prev - 1);
+
+  const handleFeedbackSubmit = async () => {
+    if (!feedbackText.trim()) return;
+    
+    setIsSubmittingFeedback(true);
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: feedbackType, text: feedbackText }),
+      });
+
+      if (response.ok) {
+        setFeedbackSuccess(true);
+        setFeedbackText('');
+        setTimeout(() => {
+            setFeedbackSuccess(false);
+            setIsFeedbackOpen(false);
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Failed to send feedback:', err);
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
 
   const renderInputModule = () => {
     switch (inputMethod) {
@@ -331,7 +359,7 @@ export default function CGPACalculator() {
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              className="absolute bottom-16 left-0 w-80 bg-card border border-border p-6 rounded-[2rem] shadow-2xl"
+              className="absolute bottom-16 left-0 w-80 bg-card/95 backdrop-blur-xl border border-border p-6 rounded-[2rem] shadow-2xl"
             >
               <h3 className="text-xl font-black mb-4">Send Feedback</h3>
               
@@ -357,20 +385,42 @@ export default function CGPACalculator() {
                   </button>
                 </div>
 
-                <textarea
-                  placeholder={feedbackType === 'feedback' ? "What can we improve?" : "Ask a question..."}
-                  className="w-full h-32 bg-secondary border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none resize-none"
-                  value={feedbackText}
-                  onChange={(e) => setFeedbackText(e.target.value)}
-                />
+                {feedbackSuccess ? (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-center justify-center py-8 text-center space-y-2"
+                  >
+                    <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-6 h-6" />
+                    </div>
+                    <p className="font-bold text-green-500">Feedback Sent!</p>
+                    <p className="text-xs text-muted-foreground italic">Thank you for helping us improve.</p>
+                  </motion.div>
+                ) : (
+                  <>
+                    <textarea
+                      placeholder={feedbackType === 'feedback' ? "What can we improve?" : "Ask a question..."}
+                      className="w-full h-32 bg-secondary border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none resize-none"
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      disabled={isSubmittingFeedback}
+                    />
 
-                <a
-                  href={`mailto:vicisssyntrx@gmail.com?subject=${feedbackType === 'feedback' ? 'CGPA Calculator Feedback' : 'CGPA Calculator Question'}&body=${encodeURIComponent(feedbackText)}`}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-foreground text-background rounded-2xl font-black hover:scale-[1.02] transition-transform"
-                >
-                  <Send className="w-4 h-4" />
-                  Send Mail
-                </a>
+                    <button
+                      onClick={handleFeedbackSubmit}
+                      disabled={!feedbackText.trim() || isSubmittingFeedback}
+                      className="w-full flex items-center justify-center gap-2 py-3 bg-foreground text-background rounded-2xl font-black hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:scale-100"
+                    >
+                      {isSubmittingFeedback ? (
+                        <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                      {feedbackType === 'feedback' ? 'Send Feedback' : 'Send Question'}
+                    </button>
+                  </>
+                )}
               </div>
             </motion.div>
           )}

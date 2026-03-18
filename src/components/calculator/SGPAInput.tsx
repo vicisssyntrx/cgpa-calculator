@@ -45,45 +45,45 @@ export function SGPAInput({ semesters, onUpdate }: SGPAInputProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {semesters.map((semester, index) => (
           <div 
             key={semester.id}
-            className="p-6 rounded-2xl bg-card border border-border group animate-in zoom-in-95"
+            className="p-6 rounded-[2rem] bg-secondary/30 border border-border/50 group hover:border-primary/30 hover:bg-secondary/50 transition-all duration-300 animate-in zoom-in-95"
           >
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-6">
               <input
                 type="text"
-                className="bg-transparent border-none font-bold text-lg outline-none focus:ring-0 w-2/3"
+                className="bg-transparent border-none font-black text-xl outline-none focus:ring-0 w-2/3 text-primary"
                 value={semester.name}
                 onChange={(e) => updateSemester(semester.id, { name: e.target.value })}
               />
               <button
                 onClick={() => removeSemester(semester.id)}
-                className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                className="p-3 text-destructive hover:bg-destructive/10 rounded-xl transition-all hover:scale-110 active:scale-90"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-5 h-5" />
               </button>
             </div>
-
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-muted-foreground uppercase">SGPA</label>
+ 
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-black text-foreground/70 uppercase tracking-wider px-1">SGPA</label>
                 <input
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  className="w-full bg-secondary/50 border-none rounded-lg p-3 text-lg font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                  className="w-full bg-card border border-border/50 rounded-xl p-4 text-xl font-black focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
                   value={semester.sgpa || ''}
                   onChange={(e) => updateSemester(semester.id, { sgpa: Number(e.target.value) })}
                 />
               </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-muted-foreground uppercase">Total Credits</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-black text-foreground/70 uppercase tracking-wider px-1">Total Credits</label>
                 <input
                   type="number"
                   placeholder="20"
-                  className="w-full bg-secondary/50 border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                  className="w-full bg-card border border-border/50 rounded-xl p-4 text-xl font-black focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
                   value={semester.totalCredits || ''}
                   onChange={(e) => updateSemester(semester.id, { totalCredits: Number(e.target.value) })}
                 />

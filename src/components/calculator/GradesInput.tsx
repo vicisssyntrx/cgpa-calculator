@@ -58,35 +58,35 @@ export function GradesInput({ subjects, onUpdate, gradingSystem }: GradesInputPr
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {subjects.map((subject, index) => (
           <div 
             key={subject.id}
-            className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 rounded-2xl bg-card border border-border group animate-in fade-in slide-in-from-bottom-2"
+            className="grid grid-cols-1 md:grid-cols-12 gap-4 p-5 rounded-2xl bg-secondary/30 border border-border/50 group hover:border-primary/30 hover:bg-secondary/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
           >
-            <div className="md:col-span-5 space-y-1">
-              <label className="text-xs font-bold text-muted-foreground uppercase">Subject Name</label>
+            <div className="md:col-span-5 space-y-1.5">
+              <label className="text-xs font-black text-foreground/70 uppercase tracking-wider px-1">Subject Name</label>
               <input
                 type="text"
                 placeholder="e.g. Physics"
-                className="w-full bg-secondary/50 border-none rounded-lg p-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all font-medium"
                 value={subject.name}
                 onChange={(e) => updateSubject(subject.id, { name: e.target.value })}
               />
             </div>
-            <div className="md:col-span-3 space-y-1">
-              <label className="text-xs font-bold text-muted-foreground uppercase">Credits</label>
+            <div className="md:col-span-3 space-y-1.5">
+              <label className="text-xs font-black text-foreground/70 uppercase tracking-wider px-1">Credits</label>
               <input
                 type="number"
-                className="w-full bg-secondary/50 border-none rounded-lg p-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all font-medium"
                 value={subject.credits}
                 onChange={(e) => updateSubject(subject.id, { credits: Number(e.target.value) })}
               />
             </div>
-            <div className="md:col-span-2 space-y-1">
-              <label className="text-xs font-bold text-muted-foreground uppercase">Grade</label>
+            <div className="md:col-span-2 space-y-1.5">
+              <label className="text-xs font-black text-foreground/70 uppercase tracking-wider px-1">Grade</label>
               <select
-                className="w-full bg-secondary/50 border-none rounded-lg p-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
+                className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer transition-all font-bold"
                 value={subject.grade}
                 onChange={(e) => updateSubject(subject.id, { grade: e.target.value })}
               >
@@ -96,14 +96,14 @@ export function GradesInput({ subjects, onUpdate, gradingSystem }: GradesInputPr
                 ))}
               </select>
             </div>
-            <div className="md:col-span-1 flex flex-col justify-center items-center space-y-1">
-              <label className="text-xs font-bold text-muted-foreground uppercase">Points</label>
-              <div className="font-bold text-lg text-primary">{subject.gradePoints}</div>
+            <div className="md:col-span-1 flex flex-col justify-center items-center space-y-1 border-l border-border/50">
+              <label className="text-xs font-black text-foreground/70 uppercase tracking-wider">Points</label>
+              <div className="font-black text-xl text-primary">{subject.gradePoints}</div>
             </div>
             <div className="md:col-span-1 flex items-end md:items-center justify-end">
               <button
                 onClick={() => removeSubject(subject.id)}
-                className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                className="p-3 text-destructive hover:bg-destructive/10 rounded-xl transition-all hover:scale-110 active:scale-90"
                 title="Remove Subject"
               >
                 <Trash2 className="w-5 h-5" />

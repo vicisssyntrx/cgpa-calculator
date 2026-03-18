@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calculator, 
@@ -13,15 +12,21 @@ import {
   RotateCcw,
   Moon,
   Sun,
-  LayoutDashboard
+  LayoutDashboard,
+  Heart,
+  MessageSquare,
+  X,
+  Send
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 import { InputMethod, Semester, Subject } from '@/types/calculator';
 import { useCalculator } from '@/hooks/useCalculator';
 import { cn } from '@/utils/cn';
+import Link from 'next/link';
 
 // Components
-import { CollegeSelect } from './CollegeSelect';
+// import { CollegeSelect } from './CollegeSelect'; // Removed as requested
 import { MarksInput } from './MarksInput';
 import { GradesInput } from './GradesInput';
 import { SGPAInput } from './SGPAInput';
@@ -64,7 +69,11 @@ const METHODS: { id: InputMethod; label: string; icon: any; description: string 
 ];
 
 export default function CGPACalculator() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState<'question' | 'feedback'>('feedback');
+  const [feedbackText, setFeedbackText] = useState('');
   const { 
     state, 
     inputMethod, 
@@ -79,18 +88,23 @@ export default function CGPACalculator() {
 
   const [selectedCollegeName, setSelectedCollegeName] = useState<string>('');
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleMethodSelect = (method: InputMethod) => {
     setInputMethod(method);
     if (state.semesters.length === 0) {
       addSemester();
     }
-    setCurrentStep(1);
+    setCurrentStep(1); // Now goes straight to input
   };
 
-  const handleCollegeSelect = (college: any) => {
-    updateGradingSystem(college.gradingSystem);
-    setSelectedCollegeName(college.name);
-  };
+  // Removed handleCollegeSelect as requested
+  // const handleCollegeSelect = (college: any) => {
+  //   updateGradingSystem(college.gradingSystem);
+  //   setSelectedCollegeName(college.name);
+  // };
 
   const currentSemester = state.semesters[0]; // For single-step inputs like Marks/Grades
 
@@ -153,17 +167,17 @@ export default function CGPACalculator() {
           <div className="p-2 bg-primary rounded-xl">
             <Calculator className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-            V-CGPA
+          <h1 className="text-2xl font-black text-foreground">
+            CGPA Calculator
           </h1>
         </div>
         
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
             className="p-2 rounded-full hover:bg-secondary transition-colors"
           >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {mounted && (resolvedTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-foreground" />)}
           </button>
           
           <button
@@ -222,55 +236,37 @@ export default function CGPACalculator() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="w-full space-y-12"
+              className="w-full space-y-8"
             >
-              <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-card p-8 rounded-[2rem] border border-border shadow-sm">
-                <div className="space-y-2 text-center md:text-left">
-                  <h2 className="text-2xl font-bold">Step 1: Setup Your College</h2>
-                  <p className="text-muted-foreground">This helps us apply the correct grading rules automatically.</p>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                <div className="flex items-center gap-4">
+                  <button onClick={prevStep} className="p-2 hover:bg-secondary rounded-xl transition-colors">
+                    <ArrowLeft className="w-6 h-6" />
+                  </button>
+                  <h2 className="text-3xl font-black">Input Your Data</h2>
                 </div>
-                <CollegeSelect onSelect={handleCollegeSelect} />
-                <div className="flex gap-4">
+                
+                <div className="flex items-center gap-4 bg-card px-4 py-2 rounded-2xl border border-border">
+                  <span className="text-xs font-bold text-muted-foreground uppercase">Grading System:</span>
                   <select 
-                    className="bg-secondary px-4 py-2 rounded-xl font-bold border-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                    className="bg-transparent font-bold cursor-pointer outline-none text-primary"
                     value={state.gradingSystem}
                     onChange={(e) => updateGradingSystem(e.target.value as any)}
                   >
                     <option value="10-point">10-Point Scale</option>
                     <option value="4-point">4-Point Scale</option>
                   </select>
-                  <button 
-                    onClick={nextStep}
-                    className="px-8 py-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-105 transition-transform flex items-center gap-2"
-                  >
-                    Continue <ArrowRight className="w-5 h-5" />
-                  </button>
                 </div>
               </div>
-            </motion.div>
-          )}
-
-          {currentStep === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="w-full space-y-8"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <button onClick={prevStep} className="p-2 hover:bg-secondary rounded-xl"><ArrowLeft/></button>
-                <h2 className="text-3xl font-black">Step 2: Input Your Data</h2>
-              </div>
               
-              <div className="bg-card p-8 rounded-[2rem] border border-border shadow-xl">
+              <div className="bg-card p-4 md:p-8 rounded-[2rem] border border-border shadow-xl">
                 {renderInputModule()}
               </div>
 
               <div className="flex justify-center">
                 <button 
                   onClick={nextStep}
-                  className="px-12 py-5 bg-foreground text-background rounded-[2rem] font-black text-xl shadow-2xl hover:scale-105 transition-transform"
+                  className="px-12 py-5 bg-primary text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
                 >
                   Calculate Results
                 </button>
@@ -278,17 +274,19 @@ export default function CGPACalculator() {
             </motion.div>
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 2 && (
             <motion.div
-              key="step3"
+              key="step2"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.05 }}
               className="w-full flex justify-center"
             >
-              <div className="w-full w-full">
+              <div className="w-full">
                  <div className="flex items-center gap-4 mb-8">
-                  <button onClick={prevStep} className="p-2 hover:bg-secondary rounded-xl"><ArrowLeft/></button>
+                  <button onClick={prevStep} className="p-2 hover:bg-secondary rounded-xl transition-colors">
+                    <ArrowLeft className="w-6 h-6" />
+                  </button>
                   <h2 className="text-3xl font-black">Your Results</h2>
                 </div>
                 <ResultView 
@@ -303,13 +301,81 @@ export default function CGPACalculator() {
         </AnimatePresence>
       </main>
 
-      {/* Persistence Indicator */}
-      {state.semesters.length > 0 && currentStep > 0 && (
-         <div className="fixed bottom-8 right-8 flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border px-4 py-2 rounded-full text-xs font-bold text-muted-foreground shadow-lg">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            Progess Saved Locally
-         </div>
-      )}
+      {/* Footer */}
+      <footer className="mt-auto pt-16 pb-8 text-center">
+        <p className="flex items-center justify-center gap-2 text-muted-foreground font-medium">
+          Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by 
+          <Link 
+            href="https://Viciss.framer.website" 
+            target="_blank" 
+            className="text-foreground font-bold hover:text-primary transition-colors hover:underline underline-offset-4"
+          >
+            Viciss_Syntrx
+          </Link>
+        </p>
+      </footer>
+
+      {/* Floating Feedback Button */}
+      <div className="fixed bottom-8 left-8 z-50">
+        <button
+          onClick={() => setIsFeedbackOpen(!isFeedbackOpen)}
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all"
+        >
+          {isFeedbackOpen ? <X className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
+          Feedback
+        </button>
+
+        <AnimatePresence>
+          {isFeedbackOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              className="absolute bottom-16 left-0 w-80 bg-card border border-border p-6 rounded-[2rem] shadow-2xl"
+            >
+              <h3 className="text-xl font-black mb-4">Send Feedback</h3>
+              
+              <div className="space-y-4">
+                <div className="flex gap-2 p-1 bg-secondary rounded-xl">
+                  <button
+                    onClick={() => setFeedbackType('feedback')}
+                    className={cn(
+                      "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
+                      feedbackType === 'feedback' ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                    )}
+                  >
+                    Feedback
+                  </button>
+                  <button
+                    onClick={() => setFeedbackType('question')}
+                    className={cn(
+                      "flex-1 py-2 text-xs font-bold rounded-lg transition-all",
+                      feedbackType === 'question' ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                    )}
+                  >
+                    Question
+                  </button>
+                </div>
+
+                <textarea
+                  placeholder={feedbackType === 'feedback' ? "What can we improve?" : "Ask a question..."}
+                  className="w-full h-32 bg-secondary border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none resize-none"
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                />
+
+                <a
+                  href={`mailto:vicisssyntrx@gmail.com?subject=${feedbackType === 'feedback' ? 'CGPA Calculator Feedback' : 'CGPA Calculator Question'}&body=${encodeURIComponent(feedbackText)}`}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-foreground text-background rounded-2xl font-black hover:scale-[1.02] transition-transform"
+                >
+                  <Send className="w-4 h-4" />
+                  Send Mail
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

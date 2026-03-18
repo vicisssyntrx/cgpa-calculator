@@ -1,4 +1,4 @@
-export type GradingSystem = '10-point' | '4-point';
+export type GradingSystem = '10-point' | '4-point' | 'nfsu-10';
 
 export interface GradeMapping {
   grade: string;

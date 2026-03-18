@@ -10,7 +10,8 @@ const COLLEGES = [
   { id: '7', name: 'Harvard University', gradingSystem: '4-point' },
   { id: '8', name: 'Massachusetts Institute of Technology (MIT)', gradingSystem: '4-point' },
   { id: '9', name: 'University of Oxford', gradingSystem: '4-point' },
-  { id: '10', name: 'National University of Singapore (NUS)', gradingSystem: '5-point' }, // Note: Need to add 5-point if needed, but sticking to 10 and 4 for now as per req
+  { id: '10', name: 'National Forensic Sciences University (NFSU)', gradingSystem: 'nfsu-10' },
+  { id: '11', name: 'National University of Singapore (NUS)', gradingSystem: '5-point' },
 ];
 
 export async function GET(request: Request) {

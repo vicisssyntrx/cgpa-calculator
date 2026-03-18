@@ -50,7 +50,7 @@ export function MarksInput({ subjects, onUpdate, gradingSystem }: MarksInputProp
         </h3>
         <button
           onClick={addSubject}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
         >
           <Plus className="w-4 h-4" />
           Add Subject

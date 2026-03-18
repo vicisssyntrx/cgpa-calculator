@@ -24,6 +24,15 @@ export const GRADING_SCALES: Record<GradingSystem, GradeMapping[]> = {
     { grade: 'D', points: 1.0, minMarks: 60, maxMarks: 62 },
     { grade: 'F', points: 0.0, minMarks: 0, maxMarks: 59 },
   ],
+  'nfsu-10': [
+    { grade: 'A+', points: 10, minMarks: 90, maxMarks: 100 },
+    { grade: 'A', points: 9, minMarks: 80, maxMarks: 89 },
+    { grade: 'B+', points: 8, minMarks: 70, maxMarks: 79 },
+    { grade: 'B', points: 7, minMarks: 60, maxMarks: 69 },
+    { grade: 'C', points: 6, minMarks: 50, maxMarks: 59 },
+    { grade: 'P', points: 5, minMarks: 40, maxMarks: 49 },
+    { grade: 'F', points: 0, minMarks: 0, maxMarks: 39 },
+  ],
 };
 
 export const calculateSGPA = (subjects: { credits: number; gradePoints: number }[]): number => {

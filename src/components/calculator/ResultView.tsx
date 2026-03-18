@@ -104,7 +104,7 @@ export function ResultView({ cgpa, semesters, gradingSystem, onExport }: ResultV
              </div>
              <button 
               onClick={onExport}
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:scale-105 transition-transform"
+              className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-105 transition-transform"
              >
                 <Download className="w-5 h-5" />
                 Download PDF

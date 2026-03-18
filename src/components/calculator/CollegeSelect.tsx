@@ -43,7 +43,7 @@ export function CollegeSelect({ onSelect, selectedId }: CollegeSelectProps) {
   const selectedCollege = colleges.find(c => c.id === selectedId);
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <div className="relative w-full max-w-md mx-auto z-50">
       <div 
         className="flex items-center gap-3 p-4 rounded-2xl bg-secondary/50 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all cursor-text"
         onClick={() => setIsOpen(true)}
@@ -63,7 +63,7 @@ export function CollegeSelect({ onSelect, selectedId }: CollegeSelectProps) {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-card border border-border shadow-2xl z-50 max-h-64 overflow-y-auto">
+        <div className="mt-2 p-2 rounded-2xl bg-card border border-border shadow-xl z-50 max-h-60 overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center text-sm text-muted-foreground">Searching...</div>
           ) : colleges.length > 0 ? (

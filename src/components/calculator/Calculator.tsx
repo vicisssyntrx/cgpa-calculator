@@ -170,37 +170,57 @@ export default function CGPACalculator() {
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center pb-32">
       {/* Header */}
-      <header className="w-full max-w-5xl flex justify-between items-center mb-12">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-xl">
-            <Calculator className="w-6 h-6 text-primary-foreground" />
+      <header className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
+        <div className="flex justify-between items-center w-full md:w-auto">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary rounded-xl">
+              <Calculator className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <h1 className="text-2xl font-black text-foreground">
+              CGPA Calculator
+            </h1>
           </div>
-          <h1 className="text-2xl font-black text-foreground">
-            CGPA Calculator
-          </h1>
+          
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-full hover:bg-secondary transition-colors"
+            >
+              {mounted && (resolvedTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-foreground" />)}
+            </button>
+            <button
+              onClick={reset}
+              className="p-1.5 rounded-xl hover:bg-secondary transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          </div>
         </div>
         
-        <div className="flex items-center gap-4 z-50">
-          <div className="w-64 md:w-80">
+        <div className="w-full md:w-auto flex items-center gap-4 z-50">
+          <div className="w-full md:w-80">
             <CollegeSelect 
               onSelect={handleCollegeSelect} 
               selectedId={state.selectedCollege} 
             />
           </div>
-          <button
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-full hover:bg-secondary transition-colors"
-          >
-            {mounted && (resolvedTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-foreground" />)}
-          </button>
           
-          <button
-            onClick={reset}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium hover:bg-secondary transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Reset
-          </button>
+          <div className="hidden md:flex items-center gap-2">
+            <button
+              onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-full hover:bg-secondary transition-colors"
+            >
+              {mounted && (resolvedTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-foreground" />)}
+            </button>
+            
+            <button
+              onClick={reset}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium hover:bg-secondary transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Reset
+            </button>
+          </div>
         </div>
       </header>
 
